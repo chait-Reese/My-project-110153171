@@ -510,14 +510,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
-  jumpKey: 32
   PlayerCamera: {fileID: 963194228}
-  groundDrag: 5
   playerHeight: 2
   whatIsGround:
     serializedVersion: 2
     m_Bits: 2147483647
-  grounded: 0
+  grounded: 1
+  groundDrag: 5
+  jumpKey: 32
+  jumpForce: 2
+  jumpCooldown: 0.25
+  airMultiplier: 0.4
 --- !u!114 &720530784
 MonoBehaviour:
   m_ObjectHideFlags: 0

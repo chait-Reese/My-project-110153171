@@ -6,19 +6,25 @@ public class playermove : MonoBehaviour
 {
     [Header("移動設定")]
     public float moveSpeed;     //移動的物體裝置
-    [Header("按鍵綁定")]
-    public KeyCode jumpKey = KeyCode.Space;  //根据需要修改jumpKey 跳跃操作的按键绑定。KeyCode.Space[空白建]
+    //[Header("按鍵綁定")]
     [Header("攝影機抓取")]
     public Transform PlayerCamera;   // 攝影機
 
 
 
-    public float groundDrag;         // 地面的減速裝置
+   
     [Header("地面檢查")]
     public float playerHeight;
     public LayerMask whatIsGround;//地板檢測
     public bool grounded;            // 布林變數：檢查地面
-
+    public float groundDrag;         // 地面的減速裝置
+    [Header("跳")]
+    public KeyCode jumpKey = KeyCode.Space;  //根据需要修改jumpKey 跳跃操作的按键绑定。KeyCode.Space[空白建]
+    
+    public float jumpForce;          // 跳躍力道
+    public float jumpCooldown;       // 設定要幾秒後才能向上跳躍
+    public float airMultiplier;
+     bool readyToJump;            // 布林變數：檢查地面
 
 
     private float horizontalInput;   // 設定左右方向按鍵的裝置
@@ -42,6 +48,8 @@ public class playermove : MonoBehaviour
         // 射線檢測？
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.3f, whatIsGround);
         //地面檢測
+        Debug.DrawRay(transform.position, new Vector3(0, -(playerHeight * 0.5f + 0.3f), 0), Color.red); // 在測試階段將射線設定為紅色線條，來看看線條長度夠不夠？
+        // 如果碰到地板，就設定一個反作用力(這個可以製造人物移動的減速感)
         if (grounded)
             rbFirstPerson.drag = groundDrag;
         else
@@ -59,6 +67,19 @@ public class playermove : MonoBehaviour
         horizontalInput = Input.GetAxisRaw("Horizontal");
         //Input.GetAxisRaw("Horizontal") 用于获取玩家按下水平方向键（左右）的输入值。返回的值是一个浮点数，表示按键的状态，-1表示按下左键，1表示按下右键，0表示未按下。
         verticalInput = Input.GetAxisRaw("Vertical");//上下同理
+
+        if (Input.GetKey(jumpKey) == true)
+        {
+            Jump(); // 執行跳躍方法
+        }
+
+        // 如果按下設定的跳躍按鍵
+        if (Input.GetKey(jumpKey) && readyToJump && grounded)
+        {
+            readyToJump = false;
+            Jump();
+            Invoke(nameof(ResetJump), jumpCooldown); // 如果跳躍過後，就會依照設定的限制時間倒數，時間到了才能往上跳躍
+        }
     }
     private void MovePlayer()   //02
     {
@@ -66,7 +87,10 @@ public class playermove : MonoBehaviour
         //                                                 PlayerCamera.right 表示相机的右向向量，垂直于相机的前向向量，指向相机的右侧。
         moveDirection = PlayerCamera.forward * verticalInput + PlayerCamera.right * horizontalInput;
         // 推動第一人稱物件
-        rbFirstPerson.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
+
+
+        if (grounded)
+            rbFirstPerson.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
         //ForceMode.Force 表示施加一个力，该力将在连续的帧之间施加，并且受到物体的质量和阻力等因素的影响。
     }
     // 方法：偵測速度並減速
@@ -81,5 +105,20 @@ public class playermove : MonoBehaviour
             Vector3 limitedVel = flatVel.normalized * moveSpeed;
             rbFirstPerson.velocity = new Vector3(limitedVel.x, rbFirstPerson.velocity.y, limitedVel.z);
         }
+    }
+
+
+
+
+    private void Jump()
+    {
+        // 重新設定Y軸速度
+        rbFirstPerson.velocity = new Vector3(rbFirstPerson.velocity.x, 0f, rbFirstPerson.velocity.z);
+        // 由下往上推第一人稱物件，ForceMode.Impulse可以讓推送的模式為一瞬間，會更像跳躍的感覺
+        rbFirstPerson.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+    }
+    private void ResetJump()
+    {
+        readyToJump = true;
     }
 }
