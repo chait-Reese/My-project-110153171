@@ -375,6 +375,7 @@ GameObject:
   - component: {fileID: 720530780}
   - component: {fileID: 720530783}
   - component: {fileID: 720530782}
+  - component: {fileID: 720530784}
   - component: {fileID: 720530779}
   - component: {fileID: 720530778}
   - component: {fileID: 720530777}
@@ -509,16 +510,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
-  jumpForce: 2
-  jumpCooldown: 5.2
-  groundDrag: 0
+  jumpKey: 32
+  PlayerCamera: {fileID: 963194228}
+  groundDrag: 5
+  playerHeight: 2
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 2147483647
+  grounded: 0
+--- !u!114 &720530784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 720530776}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9e6ba06ef8c295428ea66956efec9f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 12
+  jumpForce: 10
+  jumpCooldown: 10
+  groundDrag: -15.9
   jumpKey: 32
   PlayerCamera: {fileID: 963194228}
   playerHeight: 0
   whatIsGround:
     serializedVersion: 2
-    m_Bits: 0
-  grounded: 0
+    m_Bits: 2147483647
+  grounded: 1
 --- !u!1 &899536050
 GameObject:
   m_ObjectHideFlags: 0
