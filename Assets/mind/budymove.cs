@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class budymove : MonoBehaviour
 {
-    public float x;    //創造名為x座標[浮點]
+    public float x;    //創造名為x的東西[浮點]    後面用x调整移动的敏感度或速度
     public float y;    //同理y
-    public Transform PlayerCamera;//攝影機選項  [Transform方向等訊息]
-    float xRotation;   //x的旋轉
+    public Transform PlayerCamera;//攝影機選項  [Transform有方向等訊息]
+    float xRot;   //帶指x旋轉存在,有存在才能帶入
     float yRotaiton;   //同理
 
 
@@ -22,10 +22,15 @@ public class budymove : MonoBehaviour
     void Update()
     {
         float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * x;   // 取得滑鼠游標的X軸移動
-        float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * y;   // 取得滑鼠游標的Y軸移動
+        float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * y;   // 然後反代 float ....
 
-        xRotation -= mouseY; // 將滑鼠Y軸移動數值"倒轉"過來(正變負負變正)
-        yRotaiton += mouseX;
-        transform.rotation = Quaternion.Euler(xRotation, yRotaiton, 0); // 設定攝影機角度
+        //Input.GetAxisRaw("Mouse X") 是鼠标在 X 轴上的移动值。正向右，负向左。Time.deltaTime 时间增量，上一帧到当前帧的时间间隔 x调整移动的敏感度或速度。
+
+        xRot -= mouseY;             // 將滑鼠Y軸移動數值"倒轉"過來(正變負負變正)  {移動值轉座標{旋轉}值}
+        yRotaiton += mouseX;        //反正是相反
+        xRot = Mathf.Clamp(xRot ,- 90f, 30f) ; // 限定X軸轉動在正30度到負90度間(抬頭和低頭有限制角度)
+
+        transform.rotation = Quaternion.Euler(xRot, yRotaiton, 0); // 帶入座標造成旋轉
+        
     }
 }
