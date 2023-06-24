@@ -5,6 +5,7 @@ using TMPro;
 
 public class shootingmax : MonoBehaviour
 {
+   
     [Header("參考物件")]
     public Camera PlayerCamera;
     public Transform attackPoint;
@@ -24,12 +25,16 @@ public class shootingmax : MonoBehaviour
     public TextMeshProUGUI ammunitionDisplay;
     public TextMeshProUGUI reloadingDisplay;
 
+   
+
     private void Start()
     {
         bulletsLeft = magazineSize;
         reloadingDisplay.enabled = false;
 
         ShowAmmoDisplay();
+       
+
     }
 
     private void Update()
@@ -44,6 +49,8 @@ public class shootingmax : MonoBehaviour
             if (bulletsLeft > 0 && !reloading)
             {
                 Shoot();
+                //
+                
             }
         }
 
@@ -64,17 +71,22 @@ public class shootingmax : MonoBehaviour
 
         Debug.DrawRay(ray.origin, targetPoint - ray.origin, Color.red, 10);
 
+
+
         Vector3 shootingDirection = targetPoint - attackPoint.position;
         GameObject currentBullet = Instantiate(bullet, attackPoint.position, Quaternion.identity);
         currentBullet.transform.forward = shootingDirection.normalized;
 
+        
         currentBullet.GetComponent<Rigidbody>().AddForce(currentBullet.transform.forward * 100,ForceMode.Impulse);
 
         bulletsLeft--;
 
         this.GetComponent<Rigidbody>().AddForce(-shootingDirection.normalized * recoilForce, ForceMode.Impulse);
-
+        
         ShowAmmoDisplay();
+
+       
     }
 
     private void Reload()
@@ -97,4 +109,6 @@ public class shootingmax : MonoBehaviour
         if (ammunitionDisplay != null)
             ammunitionDisplay.SetText($"Ammo {bulletsLeft} / {magazineSize}");
     }
+
+    
 }
