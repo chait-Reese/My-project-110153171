@@ -30,9 +30,11 @@ public class Shooting1 : MonoBehaviour
             //Calculate direction from attackPoint to targetPoint
             Vector3 directionWithoutSpread = targetPoint - attackPoint.position;
             GameObject currentBullet = Instantiate(bullet, attackPoint.position, Quaternion.identity); //store instantiated bullet in currentBullet
+           
             currentBullet.transform.forward = directionWithoutSpread.normalized;
 
-            currentBullet.GetComponent<Rigidbody>().AddForce(directionWithoutSpread.normalized * 20, ForceMode.Impulse);
+            currentBullet.GetComponent<Rigidbody>().AddForce(directionWithoutSpread.normalized * 80, ForceMode.Impulse);
+            //修改推力,子彈太輕了
         }
     }
 }
